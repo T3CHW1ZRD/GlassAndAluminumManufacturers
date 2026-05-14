@@ -4,6 +4,8 @@ A searchable, filterable directory of **77 architectural glass producers, fenest
 
 **Live site:** https://t3chw1zrd.github.io/GlassAndAluminumManufacturers/
 
+> 🔒 The site is gated by a client-side password. Set in `script.js` (currently `glass`). Search engines are blocked via `robots.txt` + `noindex` meta. Note: this is a *casual* gate — the source code is public, so anyone determined can read the data. For real privacy, move to a private repo + auth-protected hosting.
+
 ## What's inside
 
 | File | Purpose |

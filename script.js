@@ -333,4 +333,38 @@ async function load() {
   }
 }
 
-load();
+// ───── gate ─────
+const PW = 'glass';
+const AUTH_KEY = 'gam-auth';
+
+function unlock() {
+  document.getElementById('gate').remove();
+  document.getElementById('app').hidden = false;
+  load();
+}
+
+function initGate() {
+  if (sessionStorage.getItem(AUTH_KEY) === 'ok') {
+    unlock();
+    return;
+  }
+  const form = document.getElementById('gate-form');
+  const pw = document.getElementById('gate-pw');
+  const err = document.getElementById('gate-error');
+  const card = form;
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (pw.value === PW) {
+      sessionStorage.setItem(AUTH_KEY, 'ok');
+      unlock();
+    } else {
+      err.hidden = false;
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+      pw.select();
+    }
+  });
+}
+
+initGate();

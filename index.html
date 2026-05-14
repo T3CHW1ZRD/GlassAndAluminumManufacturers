@@ -3,14 +3,29 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Glass & Aluminum Manufacturers Directory</title>
-<meta name="description" content="Searchable directory of architectural glass, fenestration, and aluminum extrusion manufacturers serving North America." />
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+<title>Directory</title>
+<meta name="description" content="" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+<div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <form id="gate-form" class="gate-card" autocomplete="off">
+    <div class="gate-mark"></div>
+    <h2 id="gate-title">Restricted</h2>
+    <p>Enter the password to continue.</p>
+    <input id="gate-pw" type="password" placeholder="Password" autocomplete="off" autofocus />
+    <button type="submit">Enter</button>
+    <p id="gate-error" class="gate-error" hidden>Incorrect password.</p>
+  </form>
+</div>
+
+<div id="app" hidden>
 
 <header class="site-header">
   <div class="container">
@@ -88,6 +103,8 @@
     <p>Data compiled from public association directories (NGA, FGIA, GPI, Aluminum Association, AEC), certification listings (NFRC, SGCC, IGCC, AAMA), trade publications (USGlass, Window+Door, Glass Magazine), and each vendor's own published materials. Fields marked <em>not&nbsp;available</em> were not published at the time of research. See <a href="docs/discovery-methods.md">research methodology</a> · <a href="https://github.com/T3CHW1ZRD/GlassAndAluminumManufacturers">repo</a>.</p>
   </div>
 </footer>
+
+</div><!-- /#app -->
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="script.js"></script>
