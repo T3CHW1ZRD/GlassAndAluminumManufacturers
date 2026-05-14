@@ -84,11 +84,29 @@ const state = {
   all: [],
   filtered: [],
   segment: 'all',
+  country: 'all',
+  stateProv: '',
   pricing: '',
   sort: 'name',
   search: '',
   acceptingOnly: false,
   hideRedFlags: false,
+};
+
+const STATE_NAMES = {
+  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
+  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
+  HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
+  KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
+  MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri',
+  MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey',
+  NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio',
+  OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina',
+  SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont',
+  VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming',
+  AB: 'Alberta', BC: 'British Columbia', MB: 'Manitoba', NB: 'New Brunswick',
+  NL: 'Newfoundland and Labrador', NS: 'Nova Scotia', ON: 'Ontario', PE: 'Prince Edward Island',
+  QC: 'Quebec', SK: 'Saskatchewan',
 };
 
 const $ = (sel) => document.querySelector(sel);
@@ -226,6 +244,8 @@ function applyFilters() {
 
   let filtered = state.all.filter((v) => {
     if (state.segment !== 'all' && v.segment !== state.segment) return false;
+    if (state.country !== 'all' && (v.hq_country || '').trim() !== state.country) return false;
+    if (state.stateProv && (v.hq_state || '').trim() !== state.stateProv) return false;
     if (state.pricing && (v.pricing_tier || '').toLowerCase() !== state.pricing) return false;
     if (accepting && (v.accepting_new_customers || '').toLowerCase() !== 'yes') return false;
     if (hideRF && hasRedFlag(v)) return false;
@@ -276,23 +296,75 @@ function render() {
   countEl.textContent = `${state.filtered.length} of ${state.all.length} vendor${state.all.length === 1 ? '' : 's'}`;
 }
 
+function populateStateDropdown() {
+  const sel = $('#state');
+  if (!sel) return;
+  const codes = new Set();
+  state.all.forEach((v) => {
+    const c = (v.hq_country || '').trim();
+    const s = (v.hq_state || '').trim();
+    if (!s) return;
+    if (state.country !== 'all' && c !== state.country) return;
+    codes.add(s);
+  });
+  const sorted = [...codes].sort((a, b) => (STATE_NAMES[a] || a).localeCompare(STATE_NAMES[b] || b));
+  const current = state.stateProv;
+  sel.innerHTML = '<option value="">Any</option>' +
+    sorted.map((code) => `<option value="${escapeHTML(code)}">${escapeHTML(STATE_NAMES[code] || code)}</option>`).join('');
+  if (current && sorted.includes(current)) sel.value = current;
+  else { sel.value = ''; state.stateProv = ''; }
+}
+
 function bindEvents() {
   $('#search').addEventListener('input', (e) => {
     state.search = e.target.value;
     applyFilters();
   });
-  document.querySelectorAll('.chip').forEach((chip) => {
+  // segment chips
+  document.querySelectorAll('.chip[data-segment]').forEach((chip) => {
     chip.addEventListener('click', () => {
-      document.querySelectorAll('.chip').forEach((c) => c.classList.remove('active'));
+      document.querySelectorAll('.chip[data-segment]').forEach((c) => c.classList.remove('active'));
       chip.classList.add('active');
       state.segment = chip.dataset.segment;
       applyFilters();
     });
   });
+  // country chips
+  document.querySelectorAll('.chip[data-country]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip[data-country]').forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.country = chip.dataset.country;
+      populateStateDropdown();
+      applyFilters();
+    });
+  });
+  $('#state').addEventListener('change', (e) => { state.stateProv = e.target.value; applyFilters(); });
   $('#pricing').addEventListener('change', (e) => { state.pricing = e.target.value; applyFilters(); });
   $('#sort').addEventListener('change', (e) => { state.sort = e.target.value; applyFilters(); });
   $('#accepting').addEventListener('change', (e) => { state.acceptingOnly = e.target.checked; applyFilters(); });
   $('#hide-redflags').addEventListener('change', (e) => { state.hideRedFlags = e.target.checked; applyFilters(); });
+  $('#clear-filters').addEventListener('click', () => {
+    state.search = '';
+    state.segment = 'all';
+    state.country = 'all';
+    state.stateProv = '';
+    state.pricing = '';
+    state.sort = 'name';
+    state.acceptingOnly = false;
+    state.hideRedFlags = false;
+    $('#search').value = '';
+    document.querySelectorAll('.chip[data-segment]').forEach((c) =>
+      c.classList.toggle('active', c.dataset.segment === 'all'));
+    document.querySelectorAll('.chip[data-country]').forEach((c) =>
+      c.classList.toggle('active', c.dataset.country === 'all'));
+    $('#pricing').value = '';
+    $('#sort').value = 'name';
+    $('#accepting').checked = false;
+    $('#hide-redflags').checked = false;
+    populateStateDropdown();
+    applyFilters();
+  });
 
   grid.addEventListener('click', (e) => {
     const card = e.target.closest('.card');
@@ -325,6 +397,7 @@ async function load() {
     const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
     state.all = parsed.data.filter((r) => r.company_name && r.company_name.trim());
     $('#stat-total').textContent = state.all.length;
+    populateStateDropdown();
     bindEvents();
     applyFilters();
   } catch (err) {

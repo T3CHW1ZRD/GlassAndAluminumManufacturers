@@ -50,11 +50,25 @@
         <input id="search" type="search" placeholder="Search company, specialty, parent, city…" autocomplete="off" />
       </div>
       <div class="chip-group" role="tablist" aria-label="Segment">
-        <button class="chip active" data-segment="all">All</button>
+        <button class="chip active" data-segment="all">All segments</button>
         <button class="chip" data-segment="architectural_glass"><span class="dot dot-glass"></span>Architectural glass</button>
         <button class="chip" data-segment="fenestration"><span class="dot dot-fen"></span>Fenestration</button>
         <button class="chip" data-segment="aluminum_extrusion"><span class="dot dot-alu"></span>Aluminum extrusion</button>
       </div>
+    </div>
+    <div class="filters-row location-row">
+      <div class="filter-label">Location</div>
+      <div class="chip-group" role="tablist" aria-label="Country">
+        <button class="chip country-chip active" data-country="all">All countries</button>
+        <button class="chip country-chip" data-country="USA">United States</button>
+        <button class="chip country-chip" data-country="Canada">Canada</button>
+      </div>
+      <label class="select-wrap">
+        <span>State / Province</span>
+        <select id="state">
+          <option value="">Any</option>
+        </select>
+      </label>
     </div>
     <div class="filters-row secondary">
       <label class="select-wrap">
@@ -78,12 +92,13 @@
       </label>
       <label class="check-wrap">
         <input id="accepting" type="checkbox" />
-        <span>Accepting new customers only</span>
+        <span>Accepting only</span>
       </label>
       <label class="check-wrap">
         <input id="hide-redflags" type="checkbox" />
-        <span>Hide vendors with red flags</span>
+        <span>Hide red flags</span>
       </label>
+      <button type="button" id="clear-filters" class="clear-btn">Clear filters</button>
       <div class="count" id="count" aria-live="polite">— vendors</div>
     </div>
   </div>

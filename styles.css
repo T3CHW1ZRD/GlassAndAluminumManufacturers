@@ -194,6 +194,35 @@ h1 {
   font-size: 13px;
   color: var(--text-muted);
 }
+.filters-row.location-row {
+  margin-top: 10px;
+  font-size: 13px;
+}
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  margin-right: 4px;
+}
+.clear-btn {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.clear-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
 .search-wrap {
   position: relative;
   flex: 1 1 320px;
