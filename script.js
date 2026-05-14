@@ -24,7 +24,7 @@ const FIELD_SECTIONS = [
   { title: 'Reachability', fields: ['accepting_new_customers', 'preferred_contact_method', 'response_time_reputation'] },
   { title: 'Digital presence', fields: ['linkedin_url', 'linkedin_followers', 'linkedin_last_post_recency', 'facebook_url', 'instagram_url', 'youtube_url', 'twitter_url', 'recent_trade_show'] },
   { title: 'Leadership', fields: ['ceo_president', 'vp_sales_or_commercial'] },
-  { title: 'Red flags', fields: ['red_flags'], danger: true },
+  { title: 'Notes', fields: ['red_flags'], danger: true },
 ];
 
 const FIELD_LABEL = {
@@ -73,7 +73,7 @@ const FIELD_LABEL = {
   recent_trade_show: 'Most recent trade show',
   ceo_president: 'CEO / President',
   vp_sales_or_commercial: 'VP of Sales / Commercial',
-  red_flags: 'Red flags',
+  red_flags: 'Notes',
 };
 
 const URL_FIELDS = new Set(['website', 'contact_form_url', 'linkedin_url', 'facebook_url', 'instagram_url', 'youtube_url', 'twitter_url']);
@@ -179,7 +179,7 @@ function renderCard(v, idx) {
   const tier = (v.pricing_tier || '').toLowerCase();
   const tierTag = ['budget', 'mid', 'premium'].includes(tier)
     ? `<span class="tag tier-${tier}">${tier}</span>` : '';
-  const redFlagTag = hasRedFlag(v) ? '<span class="tag redflag">⚠ red flag</span>' : '';
+  const redFlagTag = hasRedFlag(v) ? '<span class="tag redflag">⚠ note</span>' : '';
   const specialty = isNA(v.primary_specialty)
     ? '<span class="na">Specialty not available</span>'
     : escapeHTML(v.primary_specialty);
